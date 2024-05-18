@@ -1,0 +1,436 @@
+{
+	"info": {
+		"_postman_id": "9d8b3d12-0863-410d-8127-23806086cbe6",
+		"name": "Hubspot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29660127"
+	},
+	"item": [
+		{
+			"name": "Perfil",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"window = {}\r",
+							"pm.sendRequest(\"https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js\",\r",
+							"  (error, response) => {\r",
+							"    if(error || response.code != 200){\r",
+							"      pm.expect.fail(\"Not Loaded JS\")\r",
+							"    }\r",
+							"    eval(response.text())\r",
+							"\r",
+							"    window.faker.locale = \"en\"\r",
+							"\r",
+							"    const numAleatorio = Math.floor(Math.random()*1000)\r",
+							"    let nombre = window.faker.name.firstName()\r",
+							"    let apellido = window.faker.name.lastName()\r",
+							"    let nombreAleatorio =  nombre + \" \" + apellido\r",
+							"    let dominio = \"@yopmail.com\"    \r",
+							"    let correoAleatorio = nombre + numAleatorio + dominio\r",
+							"    let perfilEmpresario = [\"soy empresario\" , \"empresario\", \"comercial\", \"para empresario\"]\r",
+							"    let perfilContador = [\"soy contador\" , \"contador\", \"para contador\"]\r",
+							"    let perfil = perfilEmpresario.concat(perfilContador)\r",
+							"    const indiceAleatorio = Math.floor(Math.random() * perfil.length)\r",
+							"    let perfilAleatorio = perfil[indiceAleatorio]\r",
+							"    let primerosDigitos = \"3\" + Math.floor(Math.random() * 900 + 100);\r",
+							"    let otrosDigitos = \"\";\r",
+							"    for (let i = 0; i < 7; i++) {\r",
+							"      otrosDigitos += Math.floor(Math.random() * 10).toString();\r",
+							"    }\r",
+							"    let telefono = primerosDigitos + otrosDigitos;\r",
+							"    \r",
+							"     \r",
+							"    if (perfilEmpresario.includes(perfilAleatorio)) {\r",
+							"      lineaProducto = \"Empresarios\" \r",
+							"      } else {\r",
+							"      lineaProducto = \"Siigo Contador\"\r",
+							"    }    \r",
+							"    console.log(lineaProducto)\r",
+							"\r",
+							"    pm.environment.set(\"nombreCompleto\", nombreAleatorio)\r",
+							"    pm.environment.set(\"correo\", correoAleatorio)\r",
+							"    pm.environment.set(\"perfil\", perfilAleatorio)\r",
+							"    pm.environment.set(\"linea\", lineaProducto)\r",
+							"    pm.environment.set(\"telefono\", telefono)\r",
+							"\r",
+							"\r",
+							"  }\r",
+							")\r",
+							"\r",
+							"//https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js\r",
+							"\r",
+							"//let perfil = [\"soy empresario\", \"soy contador\", \"empresario\"] \r",
+							"//const indiceAleatorio = Math.floor(Math.random() * perfil.length)\r",
+							"//let perfilAleatorio = perfil[indiceAleatorio]"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status de la respuesta\", () => {\r",
+							"  var jsonData = pm.response.json();\r",
+							"  pm.expect(jsonData.status).to.eql(10);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ciudad\": \"Medellín\",\r\n    \"nombre_contacto\": \"{{nombreCompleto}}\",//OB\r\n    \"correo_contacto\": \"{{correo}}\",//OB\r\n    \"numero_contacto\": \"{{telefono}}\",//OB\r\n    \"perfil\": \"{{perfil}}\",\r\n    \"linea_producto\": \"{{linea}}\",//OB\r\n    \"medio_virtual\": \"Adwords\",//OB\r\n    \"mensaje\": \"Esto es un comentario\",\r\n    \"nombre_de_campana\": \"campana_regresion\",\r\n    \"identificacion\": \"\",\r\n    \"pais\": \"Colombia\",    \r\n    \"source\": \"Medios Virtuales\",\r\n    \"url\": \"https://siigoqa.siigolatam.com/\",\r\n    \"what_is_your_nit\": \"\",\r\n    \"lead_id\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://servicesqa.siigo.com/strategy/api/v1/leadsmanager/leadsManager",
+					"protocol": "https",
+					"host": [
+						"servicesqa",
+						"siigo",
+						"com"
+					],
+					"path": [
+						"strategy",
+						"api",
+						"v1",
+						"leadsmanager",
+						"leadsManager"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Concordancia Cel y Correo",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"window = {}\r",
+							"pm.sendRequest(\"https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js\",\r",
+							"  (error, response) => {\r",
+							"    if(error || response.code != 200){\r",
+							"      pm.expect.fail(\"Not Loaded JS\")\r",
+							"    }\r",
+							"    eval(response.text())\r",
+							"\r",
+							"    window.faker.locale = \"en\"\r",
+							"\r",
+							"    let nombre = window.faker.name.firstName()\r",
+							"    let apellido = window.faker.name.lastName()\r",
+							"    let nombreAleatorio =  nombre + \" \" + apellido\r",
+							"    let perfilEmpresario = [\"soy empresario\" , \"empresario\", \"comercial\", \"para empresario\"]\r",
+							"    let perfilContador = [\"soy contador\" , \"contador\", \"para contador\"]\r",
+							"    let perfil = perfilEmpresario.concat(perfilContador)\r",
+							"    const indiceAleatorio = Math.floor(Math.random() * perfil.length)\r",
+							"    let perfilAleatorio = perfil[indiceAleatorio]\r",
+							" \r",
+							"    if (perfilEmpresario.includes(perfilAleatorio)) {\r",
+							"      lineaProducto = \"Empresarios\" \r",
+							"      } else {\r",
+							"      lineaProducto = \"Siigo Contador\"\r",
+							"    }     \r",
+							"\r",
+							"    pm.environment.set(\"nombreCompleto\", nombreAleatorio)\r",
+							"    pm.environment.set(\"perfil\", perfilAleatorio)\r",
+							"    pm.environment.set(\"linea\", lineaProducto)\r",
+							"\r",
+							"  }\r",
+							")"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status de la respuesta\", () => {\r",
+							"  var jsonData = pm.response.json();\r",
+							"  pm.expect(jsonData.status).to.eql(10);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ciudad\": \"Medellín\",\r\n    \"nombre_contacto\": \"{{nombreCompleto}}\",//OB\r\n    \"correo_contacto\": \"{{correo}}\",//OB\r\n    \"numero_contacto\": \"{{telefono}}\",//OB\r\n    \"perfil\": \"{{perfil}}\",\r\n    \"linea_producto\": \"{{linea}}\",//OB\r\n    \"medio_virtual\": \"Adwords\",//OB\r\n    \"mensaje\": \"Esto es un comentario\",\r\n    \"nombre_de_campana\": \"campana_regresion\",\r\n    \"identificacion\": \"\",\r\n    \"pais\": \"Colombia\",    \r\n    \"source\": \"Medios Virtuales\",\r\n    \"url\": \"https://siigoqa.siigolatam.com/\",\r\n    \"what_is_your_nit\": \"\",\r\n    \"lead_id\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://servicesqa.siigo.com/strategy/api/v1/leadsmanager/leadsManager",
+					"protocol": "https",
+					"host": [
+						"servicesqa",
+						"siigo",
+						"com"
+					],
+					"path": [
+						"strategy",
+						"api",
+						"v1",
+						"leadsmanager",
+						"leadsManager"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Concordancia Correo",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"window = {}\r",
+							"pm.sendRequest(\"https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js\",\r",
+							"  (error, response) => {\r",
+							"    if(error || response.code != 200){\r",
+							"      pm.expect.fail(\"Not Loaded JS\")\r",
+							"    }\r",
+							"    eval(response.text())\r",
+							"\r",
+							"    window.faker.locale = \"en\"\r",
+							"\r",
+							"    let nombre = window.faker.name.firstName()\r",
+							"    let apellido = window.faker.name.lastName()\r",
+							"    let nombreAleatorio =  nombre + \" \" + apellido \r",
+							"    let perfilEmpresario = [\"soy empresario\" , \"empresario\", \"comercial\", \"para empresario\"]\r",
+							"    let perfilContador = [\"soy contador\" , \"contador\", \"para contador\"]\r",
+							"    let perfil = perfilEmpresario.concat(perfilContador)\r",
+							"    const indiceAleatorio = Math.floor(Math.random() * perfil.length)\r",
+							"    let perfilAleatorio = perfil[indiceAleatorio]\r",
+							"    let primerosDigitos = \"3\" + Math.floor(Math.random() * 900 + 100);\r",
+							"    let otrosDigitos = \"\";\r",
+							"    for (let i = 0; i < 7; i++) {\r",
+							"      otrosDigitos += Math.floor(Math.random() * 10).toString();\r",
+							"    }\r",
+							"    let telefono = primerosDigitos + otrosDigitos;\r",
+							"  \r",
+							"    if (perfilEmpresario.includes(perfilAleatorio)) {\r",
+							"      lineaProducto = \"Empresarios\" \r",
+							"      } else {\r",
+							"      lineaProducto = \"Siigo Contador\"\r",
+							"    }       \r",
+							"\r",
+							"    pm.environment.set(\"nombreCompleto\", nombreAleatorio)\r",
+							"    pm.environment.set(\"perfil\", perfilAleatorio)\r",
+							"    pm.environment.set(\"linea\", lineaProducto)\r",
+							"    pm.environment.set(\"telefono\", telefono)\r",
+							"\r",
+							"\r",
+							"  }\r",
+							")\r",
+							"\r",
+							"//https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js\r",
+							"\r",
+							"//let perfil = [\"soy empresario\", \"soy contador\", \"empresario\"] \r",
+							"//const indiceAleatorio = Math.floor(Math.random() * perfil.length)\r",
+							"//let perfilAleatorio = perfil[indiceAleatorio]"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status de la respuesta\", () => {\r",
+							"  var jsonData = pm.response.json();\r",
+							"  pm.expect(jsonData.status).to.eql(10);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ciudad\": \"Medellín\",\r\n    \"nombre_contacto\": \"{{nombreCompleto}}\",//OB\r\n    \"correo_contacto\": \"{{correo}}\",//OB\r\n    \"numero_contacto\": \"{{telefono}}\",//OB\r\n    \"perfil\": \"{{perfil}}\",\r\n    \"linea_producto\": \"{{linea}}\",//OB\r\n    \"medio_virtual\": \"Adwords\",//OB\r\n    \"mensaje\": \"Esto es un comentario\",\r\n    \"nombre_de_campana\": \"campana_regresion\",\r\n    \"identificacion\": \"\",\r\n    \"pais\": \"Colombia\",    \r\n    \"source\": \"Medios Virtuales\",\r\n    \"url\": \"https://siigoqa.siigolatam.com/\",\r\n    \"what_is_your_nit\": \"\",\r\n    \"lead_id\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://servicesqa.siigo.com/strategy/api/v1/leadsmanager/leadsManager",
+					"protocol": "https",
+					"host": [
+						"servicesqa",
+						"siigo",
+						"com"
+					],
+					"path": [
+						"strategy",
+						"api",
+						"v1",
+						"leadsmanager",
+						"leadsManager"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Concordancia Cel",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"window = {}\r",
+							"pm.sendRequest(\"https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js\",\r",
+							"  (error, response) => {\r",
+							"    if(error || response.code != 200){\r",
+							"      pm.expect.fail(\"Not Loaded JS\")\r",
+							"    }\r",
+							"    eval(response.text())\r",
+							"\r",
+							"    window.faker.locale = \"en\"\r",
+							"\r",
+							"    const numAleatorio = Math.floor(Math.random()*1000)\r",
+							"    let nombre = window.faker.name.firstName()\r",
+							"    let apellido = window.faker.name.lastName()\r",
+							"    let nombreAleatorio =  nombre + \" \" + apellido\r",
+							"    let dominio = \"@yopmail.com\"    \r",
+							"    let correoAleatorio = nombre + numAleatorio + dominio\r",
+							"    let perfilEmpresario = [\"soy empresario\" , \"empresario\", \"comercial\", \"para empresario\"]\r",
+							"    let perfilContador = [\"soy contador\" , \"contador\", \"para contador\"]\r",
+							"    let perfil = perfilEmpresario.concat(perfilContador)\r",
+							"    const indiceAleatorio = Math.floor(Math.random() * perfil.length)\r",
+							"    let perfilAleatorio = perfil[indiceAleatorio]\r",
+							"    \r",
+							"    if (perfilEmpresario.includes(perfilAleatorio)) {\r",
+							"      lineaProducto = \"Empresarios\" \r",
+							"      } else {\r",
+							"      lineaProducto = \"Siigo Contador\"\r",
+							"    }     \r",
+							"\r",
+							"    pm.environment.set(\"nombreCompleto\", nombreAleatorio)\r",
+							"    pm.environment.set(\"correo\", correoAleatorio)\r",
+							"    pm.environment.set(\"perfil\", perfilAleatorio)\r",
+							"    pm.environment.set(\"linea\", lineaProducto)\r",
+							"\r",
+							"  }\r",
+							")\r",
+							"\r",
+							"//https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js\r",
+							"\r",
+							"//let perfil = [\"soy empresario\", \"soy contador\", \"empresario\"] \r",
+							"//const indiceAleatorio = Math.floor(Math.random() * perfil.length)\r",
+							"//let perfilAleatorio = perfil[indiceAleatorio]"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status de la respuesta\", () => {\r",
+							"  var jsonData = pm.response.json();\r",
+							"  pm.expect(jsonData.status).to.eql(10);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ciudad\": \"Medellín\",\r\n    \"nombre_contacto\": \"{{nombreCompleto}}\",//OB\r\n    \"correo_contacto\": \"{{correo}}\",//OB\r\n    \"numero_contacto\": \"{{telefono}}\",//OB\r\n    \"perfil\": \"{{perfil}}\",\r\n    \"linea_producto\": \"{{linea}}\",//OB\r\n    \"medio_virtual\": \"Adwords\",//OB\r\n    \"mensaje\": \"Esto es un comentario\",\r\n    \"nombre_de_campana\": \"campana_regresion\",\r\n    \"identificacion\": \"\",\r\n    \"pais\": \"Colombia\",    \r\n    \"source\": \"Medios Virtuales\",\r\n    \"url\": \"https://siigoqa.siigolatam.com/\",\r\n    \"what_is_your_nit\": \"\",\r\n    \"lead_id\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://servicesqa.siigo.com/strategy/api/v1/leadsmanager/leadsManager",
+					"protocol": "https",
+					"host": [
+						"servicesqa",
+						"siigo",
+						"com"
+					],
+					"path": [
+						"strategy",
+						"api",
+						"v1",
+						"leadsmanager",
+						"leadsManager"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "variable_key",
+			"value": ""
+		},
+		{
+			"key": "nombre",
+			"value": ""
+		},
+		{
+			"key": "UserName",
+			"value": ""
+		}
+	]
+}
